@@ -6,6 +6,7 @@
   <title>My Market - PSST MVP</title>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.7/purify.min.js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -72,6 +73,30 @@
     }
     .card button:hover {
       background: var(--primary-hover);
+    }
+    .saved-output {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #333;
+      white-space: pre-wrap;
+    }
+    .saved-output table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .saved-output table, .saved-output th, .saved-output td {
+      border: 1px solid #ccc;
+    }
+    .saved-output th, .saved-output td {
+      padding: 8px;
+      text-align: left;
+    }
+    .saved-output th {
+      background: #e2e8f0;
     }
     footer {
       margin-top: 3rem;
@@ -151,30 +176,34 @@
       <div class="card">
         <h3>P - Problem</h3>
         <p>What inequality or frustration do you see?</p>
-        <textarea id="problem" aria-label="Describe the problem" maxlength="500"></textarea>
+        <textarea id="problem" aria-label="Describe the problem"></textarea>
         <button aria-label="Save problem input" onclick="save('problem')">Save</button>
         <button aria-label="Clear problem input" onclick="clearData('problem')">Clear</button>
+        <div class="saved-output" id="problem-output"></div>
       </div>
       <div class="card">
         <h3>S - Solution</h3>
         <p>Design your answer using GPT and your own insight.</p>
-        <textarea id="solution" aria-label="Describe the solution" maxlength="500"></textarea>
+        <textarea id="solution" aria-label="Describe the solution"></textarea>
         <button aria-label="Save solution input" onclick="save('solution')">Save</button>
         <button aria-label="Clear solution input" onclick="clearData('solution')">Clear</button>
+        <div class="saved-output" id="solution-output"></div>
       </div>
       <div class="card">
         <h3>S - Scale-Up</h3>
         <p>Can your solution help others?</p>
-        <textarea id="scale" aria-label="Describe how to scale the solution" maxlength="500"></textarea>
+        <textarea id="scale" aria-label="Describe how to scale the solution"></textarea>
         <button aria-label="Save scale-up input" onclick="save('scale')">Save</button>
         <button aria-label="Clear scale-up input" onclick="clearData('scale')">Clear</button>
+        <div class="saved-output" id="scale-output"></div>
       </div>
       <div class="card">
         <h3>T - Team</h3>
         <p>Who are your allies?</p>
-        <textarea id="team" aria-label="Describe the team" maxlength="500"></textarea>
+        <textarea id="team" aria-label="Describe the team"></textarea>
         <button aria-label="Save team input" onclick="save('team')">Save</button>
         <button aria-label="Clear team input" onclick="clearData('team')">Clear</button>
+        <div class="saved-output" id="team-output"></div>
       </div>
     </section>
 
@@ -200,6 +229,12 @@
   </footer>
 
   <script>
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     function save(key) {
       const value = document.getElementById(key).value;
       if (!value.trim()) {
@@ -208,6 +243,13 @@
       }
       try {
         localStorage.setItem(key, value);
+        const output = document.getElementById(`${key}-output`);
+        if (typeof DOMPurify !== 'undefined') {
+          output.innerHTML = DOMPurify.sanitize(value);
+        } else {
+          output.innerHTML = escapeHtml(value); // Fallback to escaped text
+          console.warn('DOMPurify not loaded; using fallback HTML escape.');
+        }
         alert('Saved to local storage.');
       } catch (e) {
         alert('Error saving data. Local storage may be full or disabled.');
@@ -217,6 +259,7 @@
     function clearData(key) {
       localStorage.removeItem(key);
       document.getElementById(key).value = '';
+      document.getElementById(`${key}-output`).innerHTML = '';
       alert('Data cleared.');
     }
 
@@ -232,7 +275,16 @@
     window.onload = function() {
       ['problem', 'solution', 'scale', 'team'].forEach(key => {
         const stored = localStorage.getItem(key);
-        if (stored) document.getElementById(key).value = stored;
+        if (stored) {
+          document.getElementById(key).value = stored;
+          const output = document.getElementById(`${key}-output`);
+          if (typeof DOMPurify !== 'undefined') {
+            output.innerHTML = DOMPurify.sanitize(stored);
+          } else {
+            output.innerHTML = escapeHtml(stored); // Fallback to escaped text
+            console.warn('DOMPurify not loaded; using fallback HTML escape.');
+          }
+        }
       });
     }
   </script>
