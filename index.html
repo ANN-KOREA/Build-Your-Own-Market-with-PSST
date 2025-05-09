@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Market - PSST MVP</title>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+    :root {
+      --primary: #2b6cb0;
+      --primary-hover: #2c5282;
+      --accent: #38a169;
+      --accent-hover: #2f855a;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    p.subtitle {
+      color: #555;
+      font-size: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      transition: 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #1a202c;
+    }
+    .card textarea {
+      width: 100%;
+      min-height: 80px;
+      margin-top: 10px;
+      padding: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .card button:hover {
+      background: var(--primary-hover);
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+    }
+    .donation {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .donation p {
+      font-size: 1rem;
+      color: #333;
+      margin: 0.5rem 0;
+    }
+    .donation button {
+      padding: 10px 16px;
+      font-size: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .donation button:hover {
+      background: var(--accent-hover);
+    }
+    form {
+      margin-top: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    form button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: var(--primary-hover);
+    }
+    @media (max-width: 600px) {
+      .card textarea {
+        min-height: 120px;
+      }
+      .card button, .donation button, form button {
+        padding: 12px 16px;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Build Your Own Market with PSST</h1>
+    <p class="subtitle">Problem - Solution - Scale-up - Team: Your Framework for Real Action</p>
+  </header>
+
+  <main>
+    <section class="grid">
+      <div class="card">
+        <h3>P - Problem</h3>
+        <p>What inequality or frustration do you see?</p>
+        <textarea id="problem" aria-label="Describe the problem" maxlength="500"></textarea>
+        <button aria-label="Save problem input" onclick="save('problem')">Save</button>
+        <button aria-label="Clear problem input" onclick="clearData('problem')">Clear</button>
+      </div>
+      <div class="card">
+        <h3>S - Solution</h3>
+        <p>Design your answer using GPT and your own insight.</p>
+        <textarea id="solution" aria-label="Describe the solution" maxlength="500"></textarea>
+        <button aria-label="Save solution input" onclick="save('solution')">Save</button>
+        <button aria-label="Clear solution input" onclick="clearData('solution')">Clear</button>
+      </div>
+      <div class="card">
+        <h3>S - Scale-Up</h3>
+        <p>Can your solution help others?</p>
+        <textarea id="scale" aria-label="Describe how to scale the solution" maxlength="500"></textarea>
+        <button aria-label="Save scale-up input" onclick="save('scale')">Save</button>
+        <button aria-label="Clear scale-up input" onclick="clearData('scale')">Clear</button>
+      </div>
+      <div class="card">
+        <h3>T - Team</h3>
+        <p>Who are your allies?</p>
+        <textarea id="team" aria-label="Describe the team" maxlength="500"></textarea>
+        <button aria-label="Save team input" onclick="save('team')">Save</button>
+        <button aria-label="Clear team input" onclick="clearData('team')">Clear</button>
+      </div>
+    </section>
+
+    <div class="donation">
+      <h2>Support the Project</h2>
+      <p>후원 계좌: 우리은행 438-07-066116</p>
+      <p>예금주: 안규환</p>
+      <button onclick="copyAccount()">계좌번호 복사</button>
+    </div>
+
+    <form action="https://formspree.io/f/mzzrddgb" method="POST">
+      <h2>Contact Me</h2>
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="_gotcha" style="display:none">
+      <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </main>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script> My Market - PSST MVP. Powered by your questions and GPT collaboration.
+  </footer>
+
+  <script>
+    function save(key) {
+      const value = document.getElementById(key).value;
+      if (!value.trim()) {
+        alert('Please enter some text before saving.');
+        return;
+      }
+      try {
+        localStorage.setItem(key, value);
+        alert('Saved to local storage.');
+      } catch (e) {
+        alert('Error saving data. Local storage may be full or disabled.');
+      }
+    }
+
+    function clearData(key) {
+      localStorage.removeItem(key);
+      document.getElementById(key).value = '';
+      alert('Data cleared.');
+    }
+
+    function copyAccount() {
+      const account = '우리은행 438-07-066116 안규환';
+      navigator.clipboard.writeText(account).then(() => {
+        alert('계좌번호가 복사되었습니다: ' + account);
+      }).catch(() => {
+        alert('복사에 실패했습니다. 계좌번호: ' + account);
+      });
+    }
+
+    window.onload = function() {
+      ['problem', 'solution', 'scale', 'team'].forEach(key => {
+        const stored = localStorage.getItem(key);
+        if (stored) document.getElementById(key).value = stored;
+      });
+    }
+  </script>
+</body>
+</html>
